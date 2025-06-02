@@ -1,18 +1,18 @@
 import * as mc from '@minecraft/server';
 
-import { consumeMainHandItem, sleep } from './utility.js';
+import { consumeMainHandItem, lazy_item, sleep } from './utility.js';
 import { MinecraftBlockTypes } from '@minecraft/vanilla-data';
 import { Vector3Utils as v3 } from '@minecraft/math';
 import { sprintf } from 'sprintf-js';
 import { getPlayerLang, strings } from './Lang.js';
 
-export const PLATFORM_ITEM = (() => {
-    const item = new mc.ItemStack("minecraft:blaze_rod", 1);
-    item.nameTag = "§r§2Rescue Platform";
-    item.setLore(["", "§r§eSave you from the void"]);
-    return item;
-})();
-(globalThis as any).getI = (player: mc.Player) => player.getComponent("minecraft:inventory")!.container!.addItem(PLATFORM_ITEM); // DEBUG
+export const PLATFORM_ITEM = lazy_item(() => {
+    const i = new mc.ItemStack("minecraft:blaze_rod", 1);
+    i.nameTag = "§r§2Rescue Platform";
+    i.setLore(["", "§r§eSave you from the void"]);
+    return i;
+});
+// (globalThis as any).getI = (player: mc.Player) => player.getComponent("minecraft:inventory")!.container!.addItem(PLATFORM_ITEM()); // DEBUG TODO: remove this line
 
 const PLATFORM_COOLDOWN = 350; // in ticks
 const PLATFORM_MAX_AGE = 300; // in ticks
@@ -34,7 +34,7 @@ interface AlivePlatform {
 const alivePlatforms: AlivePlatform[] = [];
 
 function isItemRescuePlatform(item: mc.ItemStack) {
-    return item.getLore()[1] == PLATFORM_ITEM.getLore()[1];
+    return item.getLore()[1] == PLATFORM_ITEM().getLore()[1];
 }
 
 function isPartOfPlatform(platform: AlivePlatform, blockLoc: mc.Vector3) {

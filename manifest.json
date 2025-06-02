@@ -5,7 +5,7 @@
 		"description": "Just amazing",
 		"uuid": "4565303a-8b4a-4450-b2a4-2d97c753a7f6",
 		"version": [1, 0, 0],
-		"min_engine_version": [1, 21, 0]
+		"min_engine_version": [1, 21, 70]
 	},
 	"modules": [
 		{
@@ -25,11 +25,11 @@
 	"dependencies": [
 		{
 			"module_name": "@minecraft/server",
-			"version": "1.16.0-beta"
+			"version": "2.0.0-beta"
 		},
 		{
 			"module_name": "@minecraft/server-ui",
-			"version": "1.4.0-beta"
+			"version": "2.0.0-beta"
 		},
 		{
 			"module_name": "@minecraft/server-gametest",
@@ -41,3 +41,4 @@
 		}
 	]
 }
+

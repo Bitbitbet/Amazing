@@ -32,7 +32,7 @@ export function setupGameTest(x: number, z: number, dimension: mc.Dimension) {
     z -= z % 32;
     dimension.fillBlocks(new mc.BlockVolume({ x: x, y: 317, z: z + 3 }, { x: x, y: 317, z: z + 3 }), MinecraftBlockTypes.Glass);
     dimension.fillBlocks(new mc.BlockVolume({ x: x, y: 318, z: z + 3 }, { x: x, y: 319, z: z + 3 }), MinecraftBlockTypes.Air);
-    dimension.runCommandAsync(`execute positioned ${x} 319 ${z} run gametest run AmazingSimulatedPlayerFunctionalityImplementation:Implementation`);
+    dimension.runCommand(`execute positioned ${x} 319 ${z} run gametest run AmazingSimulatedPlayerFunctionalityImplementation:Implementation`);
 }
 
 mc.world.beforeEvents.chatSend.subscribe(event => {
@@ -54,8 +54,8 @@ mc.world.beforeEvents.chatSend.subscribe(event => {
         while (true) { // Repeats until the user fill everything legally
             const form = new ui.ModalFormData();
             form.title("Simulated Player Wizard");
-            form.textField("Name:", "name of the simulated player...", defaultName);
-            form.dropdown("Game Mode:", dropdownFields, defaultGameModeChoice);
+            form.textField("Name:", "name of the simulated player...", { defaultValue: defaultName });
+            form.dropdown("Game Mode:", dropdownFields, { defaultValueIndex: defaultGameModeChoice });
 
             if (!reShowed) {
                 player.sendMessage("Please close the chat menu to see the wizard");

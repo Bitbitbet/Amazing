@@ -6,13 +6,15 @@ import {
     MinecraftEntityTypes,
     MinecraftItemTypes
 } from '@minecraft/vanilla-data';
+import { lazy_item } from './utility.js';
 
-export const SUMO_STICK_ITEM = (() => {
-    const item = new mc.ItemStack(MinecraftItemTypes.Stick, 1);
-    item.nameTag = "§r§fSumo Stick";
-    item.setLore(["", "§r§bPush everyone"]);
-    return item;
-})();
+export const SUMO_STICK_ITEM = lazy_item(() => {
+    const i = new mc.ItemStack(MinecraftItemTypes.Stick, 1);
+    i.nameTag = "§r§fSumo Stick";
+    i.setLore(["", "§r§bPush everyone"]);
+
+    return i;
+});
 
 const CONVERT_ITEM_ID = MinecraftItemTypes.NetheriteBlock;
 const CONVERT_DISTANCE = 0.35; // in blocks
@@ -42,7 +44,7 @@ const POWER_TARGET_EXCLUDES = [
 ].map(type => "minecraft:" + type);
 
 export function isItemSumoStick(item: mc.ItemStack) {
-    return item.getLore()[1] == SUMO_STICK_ITEM.getLore()[1];
+    return item.getLore()[1] == SUMO_STICK_ITEM().getLore()[1];
 }
 
 function performPower(player: mc.Player) {
@@ -69,14 +71,14 @@ function performPower(player: mc.Player) {
                     y: 0,
                     z: entity.location.z - player.location.z
                 }).normalize();
-                entity.applyKnockback(x, z, 4, 0.7);
+                entity.applyKnockback({ x: x * 4, z: z * 4 }, 0.7);
                 success = true;
             } catch { }
         }
         if (success) {
             let times = 5;
             mc.system.run(function temp() {
-                if (!entity.isValid()) return;
+                if (!entity.isValid) return;
                 let location;
                 // entity object may be released by the game engine
                 location = entity.location;
@@ -101,7 +103,7 @@ mc.world.beforeEvents.itemUse.subscribe((event) => {
 
         performPower(player);
         player.addEffect("slowness", POWER_SLOWNESS_EFFECT_DURATION, { amplifier: 1, showParticles: false });
-        mc.world.playSound("mob.enderdragon.flap", player.location);
+        player.playSound("mob.enderdragon.flap", { location: player.location });
 
         player.onScreenDisplay.setTitle(" ", {
             stayDuration: 5,
@@ -148,13 +150,13 @@ mc.system.runInterval(() => {
                 maxDistance: CONVERT_DISTANCE
             }).filter(entity => {
                 const itemStack = entity.getComponent("minecraft:item")!.itemStack;
-                return itemStack.typeId == SUMO_STICK_ITEM.typeId &&
+                return itemStack.typeId == SUMO_STICK_ITEM().typeId &&
                     !isItemSumoStick(itemStack);
             });
             if (itemEntitiesToConvert.length == 0) continue;
             for (const itemEntityToConvert of itemEntitiesToConvert) {
                 const itemToConvert = itemEntityToConvert.getComponent("minecraft:item")!.itemStack;
-                const convertedItemStack = SUMO_STICK_ITEM.clone();
+                const convertedItemStack = SUMO_STICK_ITEM().clone();
                 let convertAmount = Math.min(convertItem.amount, itemToConvert.amount);
                 convertedItemStack.amount = convertAmount;
 

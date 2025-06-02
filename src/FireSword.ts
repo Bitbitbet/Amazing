@@ -103,9 +103,9 @@ mc.world.beforeEvents.itemUse.subscribe(event => {
             entity.setOnFire(power.fireLasts);
             entity.applyDamage(power.damage, { cause: mc.EntityDamageCause.fire, damagingEntity: player });
         }
-        mc.world.playSound("fire.fire", player.location);
-        mc.world.playSound("fire.ignite", player.location);
-        mc.world.playSound("mob.ghast.fireball", player.location);
+        player.playSound("fire.fire", { location: player.location });
+        player.playSound("fire.ignite", { location: player.location });
+        player.playSound("mob.ghast.fireball", { location: player.location });
 
         player[fireSwordCooldownSymbol] = power.cooldown;
         player[fireSwordMaxCooldownSymbol] = power.cooldown;

@@ -4,4 +4,4 @@ import './DebugStick.js';
 import './RescuePlatform.js';
 import './Bedwars.js';
 import './GameTest.js';
-import './MapAdditionTools.ts';
+// import './MapAdditionTools.ts'; TODO: fix

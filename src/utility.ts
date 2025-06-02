@@ -138,6 +138,51 @@ async function _showObjectToPlayer(player: mc.Player, object: any, deriving: any
         }
     }
 }
+
+/**
+ * Lazy initialization.
+ */
+export function lazy<T>(f: () => T) {
+    let data: {
+        data: T,
+        initialized: true
+    } | {
+        initialized: false
+    } = { initialized: false };
+    return () => {
+        if (!data.initialized) {
+            data = {
+                initialized: true,
+                data: f()
+            };
+        }
+        return data.data;
+    }
+}
+/**
+ * Lazy initialization for ItemStacks. An update requires manipulation of ItemStack to have privillage.
+ * So this function would start system.run that runs the initializezr immediately.
+ * T that has an ItemStack as its member could use this function.
+ */
+export function lazy_item<T>(f: () => T) {
+    let data: {
+        data: T,
+        initialized: true
+    } | {
+        initialized: false
+    } = { initialized: false };
+    let rst = () => {
+        if (!data.initialized) {
+            data = {
+                initialized: true,
+                data: f()
+            };
+        }
+        return data.data;
+    };
+    mc.system.run(rst);
+    return rst;
+}
 /**
  * @param {mc.Player} player The player to show the object to
  * @param {any} object The value to show

@@ -283,7 +283,7 @@ function* editArea(operator: mc.Player, name: string, onConfirm: (area: Area) =>
 function* editTeam(operator: mc.Player, teamType: TeamType, map: MapInformation) {
     const {
         colorPrefix, name
-    } = TEAM_CONSTANTS[teamType];
+    } = TEAM_CONSTANTS()[teamType];
     const teamName = `${colorPrefix}${capitalize(name)}§r`;
 
     let response: Response;
@@ -411,7 +411,7 @@ function* editTeam(operator: mc.Player, teamType: TeamType, map: MapInformation)
 function* editTeamFromTemplate(operator: mc.Player, teamType: TeamType, map: MapInformation) {
     const {
         colorPrefix, name
-    } = TEAM_CONSTANTS[teamType];
+    } = TEAM_CONSTANTS()[teamType];
     const teamName = `${colorPrefix}${capitalize(name)}§r`;
 
     let response: Response;
@@ -597,7 +597,7 @@ class MapEditter {
             form.title("Teams");
             let bodyText = "Edit teams." + (this.map.teams.length ? `\n${this.map.teams.length} teams added: ` : "");
             for (const teamMapInfo of this.map.teams) {
-                const t = TEAM_CONSTANTS[teamMapInfo.type];
+                const t = TEAM_CONSTANTS()[teamMapInfo.type];
                 bodyText += `${t.colorPrefix}${t.name.toUpperCase()}`;
             }
             form.body(bodyText);
@@ -611,7 +611,7 @@ class MapEditter {
                 TeamType.Pink, TeamType.Red, TeamType.White, TeamType.Yellow
             ].filter(team => !this.map.teams.find(({ type }) => team == type));
             settingForm.dropdown("Select team type", teamList.map(team => {
-                const t = TEAM_CONSTANTS[team];
+                const t = TEAM_CONSTANTS()[team];
                 return t.colorPrefix + t.name.toUpperCase();
             }));
             const settingResponse = await settingForm.show(operator);
@@ -662,7 +662,7 @@ class MapEditter {
         }
     }
 
-    async beforeItemUseOn(event: mc.ItemUseOnBeforeEvent) {
+    async beforeItemUseOn(event: /*mc.ItemUseOnBeforeEvent TODO */ any) {
         for (let i = this.tasks.length - 1; i >= 0; --i) {
             const [task, operator] = this.tasks[i];
             if (event.source == operator) {
@@ -695,9 +695,10 @@ mc.world.beforeEvents.itemUse.subscribe(async event => {
     }
 });
 
-mc.world.beforeEvents.itemUseOn.subscribe(async event => {
-    if (mapEditter) mapEditter.beforeItemUseOn(event);
-});
+// TODO: itemUseOn has been removed.
+// mc.world.beforeEvents.itemUseOn.subscribe(async event => {
+//     if (mapEditter) mapEditter.beforeItemUseOn(event);
+// });
 
 let mapEditter: MapEditter | null = null;
 

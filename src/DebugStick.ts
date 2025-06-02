@@ -45,7 +45,7 @@ mc.world.beforeEvents.itemUse.subscribe(async event => {
 
     let data = new ui.ModalFormData();
     data.title("Debug Stick");
-    data.toggle("Debug Mode", event.source[PLAYER_DEBUG_MODE_SYM]);
+    data.toggle("Debug Mode", { defaultValue: event.source[PLAYER_DEBUG_MODE_SYM] });
     data.textField("Enter expression", "expression...");
 
     await util.sleep(0);
@@ -74,10 +74,10 @@ mc.world.beforeEvents.itemUse.subscribe(async event => {
                 changedName += '_';
             }
         }
-        code += `let ${ changedName } = ___players[${ index }]\n`;
+        code += `let ${changedName} = ___players[${index}]\n`;
         ++index;
     }
-    code += `return ${ response.formValues![1] }`;
+    code += `return ${response.formValues![1]}`;
     try {
         let result = new Function('mc', 'ui', 'util', 'mcMath', 'me', code)(
             mc, ui, util, mcMath, event.source
@@ -85,7 +85,7 @@ mc.world.beforeEvents.itemUse.subscribe(async event => {
         util.showObjectToPlayer(event.source, result);
     } catch (e) {
         if (e instanceof Error) {
-            event.source.sendMessage(`§c${ e.name }: ${ e.message }\n${ e?.stack }`);
+            event.source.sendMessage(`§c${e.name}: ${e.message}\n${e?.stack}`);
         }
     }
 });
